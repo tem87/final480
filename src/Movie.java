@@ -57,6 +57,69 @@ public class Movie {
         return length;
     }
 
+    // Add a new movie to the database
+    public boolean addMovie() {
+        String query = "INSERT INTO Movie (title, genre, rating, synopsis, length) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, genre);
+            preparedStatement.setString(3, rating);
+            preparedStatement.setString(4, synopsis);
+            preparedStatement.setString(5, length);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error adding movie: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Update an existing movie in the database
+    public boolean updateMovie() {
+        String query = "UPDATE Movie SET title = ?, genre = ?, rating = ?, synopsis = ?, length = ? WHERE movie_id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, genre);
+            preparedStatement.setString(3, rating);
+            preparedStatement.setString(4, synopsis);
+            preparedStatement.setString(5, length);
+            preparedStatement.setInt(6, movieID);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error updating movie: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Delete a movie from the database
+    public static boolean deleteMovie(int movieID) {
+        String query = "DELETE FROM Movie WHERE movie_id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, movieID);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error deleting movie: " + e.getMessage());
+            return false;
+        }
+    }
+
     // Fetch movies from the database
     public static List<Movie> fetchMovies() {
         List<Movie> movies = new ArrayList<>();
@@ -83,38 +146,14 @@ public class Movie {
 
         return movies;
     }
-
-    // Insert a new movie into the database
-    public boolean insertMovie() {
-        String query = "INSERT INTO Movie (title, genre, rating, synopsis, length) VALUES (?, ?, ?, ?, ?)";
-
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            preparedStatement.setString(1, title);
-            preparedStatement.setString(2, genre);
-            preparedStatement.setString(3, rating);
-            preparedStatement.setString(4, synopsis);
-            preparedStatement.setString(5, length);
-
-            int rowsAffected = preparedStatement.executeUpdate();
-            return rowsAffected > 0; // Return true if insertion was successful
-
-        } catch (SQLException e) {
-            System.err.println("Error inserting movie: " + e.getMessage());
-            return false;
-        }
+    public String toTableString() {
+        return String.format("%-5d %-30s %-15s %-10s %-50s %-10s",
+                movieID, title, genre, rating, synopsis, length);
     }
 
     @Override
     public String toString() {
-        return "Movie{" +
-                "movieID=" + movieID +
-                ", title='" + title + '\'' +
-                ", genre='" + genre + '\'' +
-                ", rating=" + rating +
-                ", synopsis='" + synopsis + '\'' +
-                ", length='" + length + '\'' +
-                '}';
+        return String.format("Movie{movieID=%d, title='%s', genre='%s', rating='%s', synopsis='%s', length='%s'}",
+                movieID, title, genre, rating, synopsis, length);
     }
 }
