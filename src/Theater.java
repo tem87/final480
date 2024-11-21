@@ -99,23 +99,23 @@ public class Theater {
         }
     }
 
-    // Delete a theater from the database
-    public static boolean deleteTheater(int theaterID) {
-        String query = "DELETE FROM Theater WHERE theater_id = ?";
-
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            preparedStatement.setInt(1, theaterID);
-
-            int rowsAffected = preparedStatement.executeUpdate();
-            return rowsAffected > 0; // Return true if deletion was successful
-
-        } catch (SQLException e) {
-            System.err.println("Error deleting theater: " + e.getMessage());
-            return false;
-        }
-    }
+//    // Delete a theater from the database
+//    public static boolean deleteTheater(int theaterID) {
+//        String query = "DELETE FROM Theater WHERE theater_id = ?";
+//
+//        try (Connection connection = DBConnection.getConnection();
+//             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+//
+//            preparedStatement.setInt(1, theaterID);
+//
+//            int rowsAffected = preparedStatement.executeUpdate();
+//            return rowsAffected > 0; // Return true if deletion was successful
+//
+//        } catch (SQLException e) {
+//            System.err.println("Error deleting theater: " + e.getMessage());
+//            return false;
+//        }
+//    }
 
     // Override toString
     @Override

@@ -1,24 +1,29 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class WelcomeView {
 
-    public static void main(String[] args) {
+    public static void showMainMenu() {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Movie Ticket Booking System");
+            JFrame frame = new JFrame("Movie Ticket Booking System :)");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(800, 600);
-            frame.setLayout(new BorderLayout()); // Main layout manager
-
-            // Title at the top (NORTH)
-            JLabel welcomeLabel = new JLabel("Welcome to the Movie Ticket Booking System", SwingConstants.CENTER);
-            welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
-            welcomeLabel.setForeground(Color.BLUE);
+            frame.setLayout(new BorderLayout());
+            JLabel welcomeLabel = new JLabel("MOVIE TICKET BOOKING SYSTEM", SwingConstants.CENTER);
+            welcomeLabel.setFont(new Font("Georgia", Font.BOLD, 28));
+            welcomeLabel.setForeground(new Color(0, 51, 102)); // Dark blue
+            welcomeLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
             frame.add(welcomeLabel, BorderLayout.NORTH);
 
-            // Buttons in the middle (CENTER)
+//            JLabel welcomeLabel = new JLabel("Welcome to the Movie Ticket Booking System", SwingConstants.CENTER);
+//            welcomeLabel.setFont(new Font("Stencil", Font.BOLD, 24));
+//            welcomeLabel.setForeground(Color.darkGray);
+//            frame.add(welcomeLabel, BorderLayout.NORTH);
+
             JPanel buttonPanel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.insets = new Insets(10, 10, 10, 10);
@@ -28,10 +33,13 @@ public class WelcomeView {
             JButton loginButton = createStyledButton("Login");
             JButton signInButton = createStyledButton("Sign up");
 
-            adminButton.addActionListener(e -> openAdminMenu(frame));
+            //adminButton.addActionListener(e -> openAdminMenu(frame));
+            //ACTION LISTENER TO BUTTONS TO DEFINE THE BEHAVIOR WHEN CLICKED
+            adminButton.addActionListener(e -> AdminView.showAdminLogin(frame));
             guestButton.addActionListener(e -> openGuestMenu(frame));
-            loginButton.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Login Feature Coming Soon!"));
-            signInButton.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Sign-In Feature Coming Soon!"));
+            loginButton.addActionListener(e -> loginForm(frame));
+            signInButton.addActionListener(e -> showSignUpForm(frame));
+
 
             gbc.gridy = 0;
             buttonPanel.add(adminButton, gbc);
@@ -42,288 +50,129 @@ public class WelcomeView {
             gbc.gridy = 3;
             buttonPanel.add(signInButton, gbc);
 
-            frame.add(buttonPanel, BorderLayout.CENTER); // Add button panel to the center
+            frame.add(buttonPanel, BorderLayout.CENTER);
             frame.setVisible(true);
         });
     }
 
-    // Create a styled button for consistent design
     private static JButton createStyledButton(String text) {
         JButton button = new JButton(text);
-        button.setBackground(Color.DARK_GRAY);
+        button.setBackground(new Color(200, 162, 200));
         button.setForeground(Color.WHITE);
-        button.setFont(new Font("Arial", Font.PLAIN, 18));
+        button.setFont(new Font("Arial", Font.BOLD, 18));
         button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 162, 200), 2),
+                BorderFactory.createEmptyBorder(10, 20, 10, 20)
+        ));
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(216, 191, 216));
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(200, 162, 200));
+            }
+        });
         return button;
     }
 
-    // Opens the Admin menu
-    private static void openAdminMenu(JFrame frame) {
-        frame.getContentPane().removeAll(); // Clear the frame
-        frame.setLayout(new BorderLayout());
-
-        JPanel adminPanel = new JPanel();
-        adminPanel.setLayout(new GridLayout(6, 1, 10, 10));
-
-        JLabel adminLabel = new JLabel("Admin Menu", SwingConstants.CENTER);
-        adminLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        adminPanel.add(adminLabel);
-
-        JButton viewTheatreButton = new JButton("View Theatres");
-        JButton addTheatreButton = new JButton("Add Theatre");
-        JButton modifyTheatreButton = new JButton("Modify Theatre");
-        JButton viewMovieButton = new JButton("View Movies");
-        JButton addMovieButton = new JButton("Add Movie");
-        JButton modifyMovieButton = new JButton("Modify Movie");
-        JButton deleteMovieButton = new JButton("Delete Movie");
-        JButton viewShowtimeButton = new JButton("View Showtime");
-        JButton addShowtimeButton = new JButton("Add Showtime");
-        JButton modifyShowtimeButton = new JButton("Modify Showtime");
-        JButton deleteShowtimeButton = new JButton("Delete Showtime");
-        JButton backButton = new JButton("Back to Main Menu");
-
-        viewTheatreButton.addActionListener(e -> showTheatre(frame));
-        addTheatreButton.addActionListener(e -> addTheatre(frame));
-        modifyTheatreButton.addActionListener(e -> modifyTheatre(frame));
-        viewMovieButton.addActionListener(e -> showMovie(frame));
-        addMovieButton.addActionListener(e -> addMovie(frame));
-        modifyMovieButton.addActionListener(e -> modifyMovie(frame));
-        deleteMovieButton.addActionListener(e -> deleteMovie(frame));
-        viewShowtimeButton.addActionListener(e -> showShowtime(frame));
-        addShowtimeButton.addActionListener(e -> addShowtime(frame));
-        modifyShowtimeButton.addActionListener(e -> modifyShowtime(frame));
-        deleteShowtimeButton.addActionListener(e -> deleteShowtime(frame));
-        backButton.addActionListener(e -> mainMenu(frame));
-
-        adminPanel.add(viewTheatreButton);
-        adminPanel.add(addTheatreButton);
-        adminPanel.add(modifyTheatreButton);
-        adminPanel.add(viewMovieButton);
-        adminPanel.add(addMovieButton);
-        adminPanel.add(modifyMovieButton);
-        adminPanel.add(deleteMovieButton);
-        adminPanel.add(viewMovieButton);
-        adminPanel.add(addShowtimeButton);
-        adminPanel.add(modifyShowtimeButton);
-        adminPanel.add(deleteShowtimeButton);
-        adminPanel.add(backButton);
-
-        frame.add(adminPanel, BorderLayout.CENTER);
-        frame.revalidate();
-        frame.repaint();
-    }
-
-    private static void showMovie(JFrame frame) {
-        frame.getContentPane().removeAll(); // Clear the frame
-        frame.setLayout(new BorderLayout());
-
-        // Fetch movies from the database
-        List<Movie> movies = Movie.fetchMovies();
-
-        // Create column headers
-        String[] columnNames = {"ID", "Title", "Genre", "Rating", "Synopsis", "Length"};
-
-        // Populate movie data into a 2D array for JTable
-        Object[][] data = new Object[movies.size()][columnNames.length];
-        for (int i = 0; i < movies.size(); i++) {
-            Movie movie = movies.get(i);
-            data[i][0] = movie.getMovieID();
-            data[i][1] = movie.getTitle();
-            data[i][2] = movie.getGenre();
-            data[i][3] = movie.getRating();
-            data[i][4] = movie.getSynopsis();
-            data[i][5] = movie.getLength();
-        }
-
-        // Create JTable with the movie data
-        JTable table = new JTable(data, columnNames);
-        table.setFillsViewportHeight(true); // Ensure table fills the viewport
-        table.setRowHeight(30); // Set row height
-        table.setFont(new Font("Arial", Font.PLAIN, 14)); // Set table font
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16)); // Set header font
-
-        // Add the table to a scroll pane
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        // Back button to return to Admin Menu
-        JButton backButton = new JButton("Back to Admin Menu");
-        backButton.setBackground(Color.DARK_GRAY);
-        backButton.setForeground(Color.WHITE);
-        backButton.addActionListener(e -> openAdminMenu(frame));
-
-        // Add components to the panel
-        JPanel moviesPanel = new JPanel(new BorderLayout());
-        moviesPanel.add(scrollPane, BorderLayout.CENTER);
-        moviesPanel.add(backButton, BorderLayout.SOUTH);
-
-        // Add the panel to the frame
-        frame.add(moviesPanel, BorderLayout.CENTER);
-        frame.revalidate();
-        frame.repaint();
-    }
 
 
-    private static void addMovie(JFrame frame) {
-        JTextField titleField = new JTextField();
-        JTextField genreField = new JTextField();
-        JTextField ratingField = new JTextField();
-        JTextField synopsisField = new JTextField();
-        JTextField lengthField = new JTextField();
+
+    private static void showSignUpForm(JFrame frame) {
+        JTextField nameField = new JTextField();
+        JTextField emailField = new JTextField();
+        JPasswordField passwordField = new JPasswordField();
+        JTextField phoneField = new JTextField();
+        JTextField addressField = new JTextField();
 
         Object[] message = {
-                "Title:", titleField,
-                "Genre:", genreField,
-                "Rating:", ratingField,
-                "Synopsis:", synopsisField,
-                "Length:", lengthField
+                "Full Name:", nameField,
+                "Email:", emailField,
+                "Password:", passwordField,
+                "Phone Number (e.g. 585-589-5236):", phoneField,
+                "Address:", addressField
         };
 
-        int option = JOptionPane.showConfirmDialog(frame, message, "Add New Movie", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(frame, message, "Sign Up", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
-            String title = titleField.getText();
-            String genre = genreField.getText();
-            String rating = ratingField.getText();
-            String synopsis = synopsisField.getText();
-            String length = lengthField.getText();
+            String name = nameField.getText();
+            String email = emailField.getText();
+            String password = new String(passwordField.getPassword());
+            String phone = phoneField.getText();
+            String address = addressField.getText();
 
-            Movie newMovie = new Movie(title, genre, rating, synopsis, length);
-            if (newMovie.addMovie()) {
-                JOptionPane.showMessageDialog(frame, "Movie added successfully!");
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Name, Email, and Password are required!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            User newUser = new User(name, email, password, phone, address);
+
+            if (newUser.saveToDatabase()) {
+                JOptionPane.showMessageDialog(frame, "Sign Up Successful! Welcome, " + name + "Login now to access all the features");
             } else {
-                JOptionPane.showMessageDialog(frame, "Failed to add movie.");
-            }
-        }
-    }
-    private static void modifyMovie(JFrame frame) {
-        List<Movie> movies = Movie.fetchMovies();
-        String[] movieTitles = movies.stream().map(Movie::getTitle).toArray(String[]::new);
-
-        String selectedMovie = (String) JOptionPane.showInputDialog(
-                frame,
-                "Select a movie to modify:",
-                "Modify Movie",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                movieTitles,
-                null
-        );
-
-        if (selectedMovie != null) {
-            Movie movieToEdit = movies.stream()
-                    .filter(movie -> movie.getTitle().equals(selectedMovie))
-                    .findFirst()
-                    .orElse(null);
-
-            if (movieToEdit != null) {
-                JTextField titleField = new JTextField(movieToEdit.getTitle());
-                JTextField genreField = new JTextField(movieToEdit.getGenre());
-                JTextField ratingField = new JTextField(movieToEdit.getRating());
-                JTextField synopsisField = new JTextField(movieToEdit.getSynopsis());
-                JTextField lengthField = new JTextField(movieToEdit.getLength());
-
-                Object[] message = {
-                        "Title:", titleField,
-                        "Genre:", genreField,
-                        "Rating:", ratingField,
-                        "Synopsis:", synopsisField,
-                        "Length:", lengthField
-                };
-
-                int option = JOptionPane.showConfirmDialog(frame, message, "Modify Movie", JOptionPane.OK_CANCEL_OPTION);
-                if (option == JOptionPane.OK_OPTION) {
-                    movieToEdit = new Movie(
-                            movieToEdit.getMovieID(),
-                            titleField.getText(),
-                            genreField.getText(),
-                            ratingField.getText(),
-                            synopsisField.getText(),
-                            lengthField.getText()
-                    );
-
-                    if (movieToEdit.modifyMovie()) {
-                        JOptionPane.showMessageDialog(frame, "Movie updated successfully!");
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "Failed to update movie.");
-                    }
-                }
+                JOptionPane.showMessageDialog(frame, "Sign Up Failed. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
+    private static void loginForm(JFrame frame) {
+        JTextField emailField = new JTextField();
+        JPasswordField passwordField = new JPasswordField();
 
-    private static void deleteMovie(JFrame frame) {
-        List<Movie> movies = Movie.fetchMovies();
-        String[] movieTitles = movies.stream().map(Movie::getTitle).toArray(String[]::new);
+        Object[] message = {
+                "Email:", emailField,
+                "Password:", passwordField
+        };
 
-        String selectedMovie = (String) JOptionPane.showInputDialog(
-                frame,
-                "Select a movie to delete:",
-                "Delete Movie",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                movieTitles,
-                null
-        );
+        int option = JOptionPane.showConfirmDialog(frame, message, "Login", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            String email = emailField.getText();
+            String password = new String(passwordField.getPassword());
 
-        if (selectedMovie != null) {
-            Movie movieToDelete = movies.stream()
-                    .filter(movie -> movie.getTitle().equals(selectedMovie))
-                    .findFirst()
-                    .orElse(null);
-
-            if (movieToDelete != null) {
-                int confirmation = JOptionPane.showConfirmDialog(
-                        frame,
-                        "Are you sure you want to delete " + selectedMovie + "?",
-                        "Confirm Deletion",
-                        JOptionPane.YES_NO_OPTION
-                );
-
-                if (confirmation == JOptionPane.YES_OPTION) {
-                    if (Movie.deleteMovie(movieToDelete.getMovieID())) {
-                        JOptionPane.showMessageDialog(frame, "Movie deleted successfully!");
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "Failed to delete movie.");
-                    }
-                }
+            User loggedInUser = User.authenticate(email, password);
+            if (loggedInUser != null) {
+                JOptionPane.showMessageDialog(frame, "Login Successful! Welcome, " + loggedInUser.getName());
+                showUserMenu(frame, loggedInUser);
+            } else {
+                JOptionPane.showMessageDialog(frame, "Invalid email or password. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
+    private static void showUserMenu(JFrame frame, User user) {
+        frame.getContentPane().removeAll();
+        frame.setLayout(new BorderLayout());
 
-    private static void showShowtime(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, "Soon!");
-    }
+        JLabel userLabel = new JLabel("Welcome, " + user.getName(), SwingConstants.CENTER);
+        userLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        userLabel.setForeground(new Color(0, 51, 102));
+        frame.add(userLabel, BorderLayout.NORTH);
 
-    private static void showTheatre(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, "Soon!");
-    }
+        JPanel userMenuPanel = new JPanel(new GridLayout(0, 1, 10, 10));
 
-    private static void addShowtime(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, "Soon!");
-    }
+        JButton viewMoviesButton = new JButton("View Movies");
+        JButton viewShowtimesButton = new JButton("View Showtimes");
+        JButton bookTicketButton = new JButton("Book Ticket");
+        JButton logoutButton = new JButton("Logout");
 
-    private static void addTheatre(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, "Soon!");
-    }
+//        viewMoviesButton.addActionListener(e -> showMovie(frame));
+//        viewShowtimesButton.addActionListener(e -> showShowtime(frame));
+//        bookTicketButton.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Booking Feature Coming Soon!"));
+//        //Redirect back to the main menu
+//        logoutButton.addActionListener(e -> mainMenu(frame));
 
-    private static void modifyShowtime(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, "Soon!");
-    }
+        userMenuPanel.add(viewMoviesButton);
+        userMenuPanel.add(viewShowtimesButton);
+        userMenuPanel.add(bookTicketButton);
+        userMenuPanel.add(logoutButton);
 
-    private static void modifyTheatre(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, "Soon!");
-    }
-
-    private static void deleteShowtime(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, "Soon!");
-    }
-    private static void deleteTheatre(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, "Soon!");
-    }
-
-    private static void showShowtimes(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, "Soon!");
+        frame.add(userMenuPanel, BorderLayout.CENTER);
+        frame.revalidate();
+        frame.repaint();
     }
 
 
@@ -342,9 +191,9 @@ public class WelcomeView {
         JButton viewShowtimesButton = new JButton("View Showtimes");
         JButton backButton = new JButton("Back to Main Menu");
 
-        viewMoviesButton.addActionListener(e -> showMovie(frame));
-        viewShowtimesButton.addActionListener(e -> showShowtimes(frame));
-        backButton.addActionListener(e -> mainMenu(frame));
+//        viewMoviesButton.addActionListener(e -> showMovie(frame));
+//        viewShowtimesButton.addActionListener(e -> showShowtime(frame));
+//        backButton.addActionListener(e -> mainMenu(frame));
 
         guestPanel.add(viewMoviesButton);
         guestPanel.add(viewShowtimesButton);
@@ -355,10 +204,10 @@ public class WelcomeView {
         frame.repaint();
     }
 
-    private static void mainMenu(JFrame frame) {
-        frame.getContentPane().removeAll();
-        main(new String[]{}); // Restart main
-    }
+//    private static void mainMenu(JFrame frame) {
+//        frame.getContentPane().removeAll();
+//        main(new String[]{}); // Restart main
+//    }
 
 }
 
