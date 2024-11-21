@@ -12,7 +12,7 @@ public class Menu {
         System.out.println("6. Add Movie");
         System.out.println("7. Modify Movie");
         System.out.println("8. Delete Movie");
-        System.out.println("9. View Showtime");
+        System.out.println("9. View Showtimes");
         System.out.println("10. Add Showtime");
         System.out.println("11. Modify Showtime");
         System.out.println("12. Delete Showtime");
@@ -69,8 +69,17 @@ public class Menu {
     }
 
     public static void showGuestMenu(Scanner scanner) {
-        System.out.println("\nNeed to implement");
+        System.out.println("\nGuest Menu:");
+        System.out.println("1. View Theaters");
+        System.out.println("2. Browse Movies");
+        System.out.println("3. View Showtimes");
+        System.out.println("4. Select Theater");
+        System.out.println("5. Select Movie");
+        System.out.println("6. Purchase tickets");
+        System.out.println("7. Exit");
+        System.out.print("Please select an option: ");
     }
+
 
 
     public static void showLogin(Scanner scanner) {

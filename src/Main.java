@@ -32,7 +32,6 @@ public class Main {
         }
     }
 
-    // Moved selectUserRole from Menu to Main
     public static UserRole selectUserRole(Scanner scanner) {
         System.out.println("Please select your role:");
         System.out.println("1. Admin");

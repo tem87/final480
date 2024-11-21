@@ -12,6 +12,7 @@ public class Movie {
     private String rating;
     private String synopsis;
     private String length;
+    //private String imagePath;
 
     // Constructor for retrieving existing movies
     public Movie(int movieID, String title, String genre, String rating, String synopsis, String length) {
@@ -21,6 +22,7 @@ public class Movie {
         this.rating = rating;
         this.synopsis = synopsis;
         this.length = length;
+        //this.imagePath = imagePath;
     }
 
     // Constructor for creating new movies (without ID)
@@ -80,7 +82,7 @@ public class Movie {
     }
 
     // Update an existing movie in the database
-    public boolean updateMovie() {
+    public boolean modifyMovie() {
         String query = "UPDATE Movie SET title = ?, genre = ?, rating = ?, synopsis = ?, length = ? WHERE movie_id = ?";
 
         try (Connection connection = DBConnection.getConnection();

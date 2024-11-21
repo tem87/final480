@@ -56,7 +56,7 @@ public class MovieManager {
         String length = scanner.nextLine();
 
         Movie updatedMovie = new Movie(id, title, genre, rating, synopsis, length);
-        if (updatedMovie.updateMovie()) {
+        if (updatedMovie.modifyMovie()) {
             System.out.println("Movie updated successfully!");
         } else {
             System.out.println("Failed to update movie.");
