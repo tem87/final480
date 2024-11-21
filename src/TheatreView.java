@@ -4,7 +4,7 @@ import java.util.List;
 
 public class TheatreView {
 
-    public static void showTheatre(JFrame frame) {
+    public static void showTheatre(JFrame frame, Runnable backToMenuCallback) {
         frame.getContentPane().removeAll();
         frame.setLayout(new BorderLayout());
 
@@ -28,8 +28,9 @@ public class TheatreView {
 
         JScrollPane scrollPane = new JScrollPane(table);
 
-        JButton backButton = new JButton("Back to Admin Menu");
-        backButton.addActionListener(e -> AdminView.openAdminMenu(frame));
+        // Back button with a dynamic callback
+        JButton backButton = new JButton("Back to Menu");
+        backButton.addActionListener(e -> backToMenuCallback.run());
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -39,6 +40,7 @@ public class TheatreView {
         frame.revalidate();
         frame.repaint();
     }
+
 
     public static void addTheatre(JFrame frame) {
         JTextField nameField = new JTextField();

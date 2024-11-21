@@ -3,11 +3,13 @@ import java.awt.*;
 import java.util.List;
 
 public class MovieView {
-    public static void showMovie(JFrame frame) {
+
+    // Show movies and provide a dynamic back button callback
+    public static void showMovie(JFrame frame, Runnable backToMenuCallback) {
         frame.getContentPane().removeAll();
         frame.setLayout(new BorderLayout());
 
-        java.util.List<Movie> movies = Movie.fetchMovies();
+        List<Movie> movies = Movie.fetchMovies();
 
         String[] columnNames = {"ID", "Title", "Genre", "Rating", "Synopsis", "Length"};
 
@@ -30,11 +32,11 @@ public class MovieView {
 
         JScrollPane scrollPane = new JScrollPane(table);
 
-        // Back button to return to Admin Menu
-        JButton backButton = new JButton("Back to Admin Menu");
+        // Back button to dynamically return to the user's menu
+        JButton backButton = new JButton("Back to Menu");
         backButton.setBackground(Color.DARK_GRAY);
         backButton.setForeground(Color.WHITE);
-        backButton.addActionListener(e -> AdminView.openAdminMenu(frame));
+        backButton.addActionListener(e -> backToMenuCallback.run());
 
         JPanel moviesPanel = new JPanel(new BorderLayout());
         moviesPanel.add(scrollPane, BorderLayout.CENTER);
@@ -45,6 +47,7 @@ public class MovieView {
         frame.repaint();
     }
 
+    // Add a new movie (Admin-specific functionality)
     public static void addMovie(JFrame frame) {
         JTextField titleField = new JTextField();
         JTextField genreField = new JTextField();
@@ -76,6 +79,8 @@ public class MovieView {
             }
         }
     }
+
+    // Modify an existing movie (Admin-specific functionality)
     public static void modifyMovie(JFrame frame) {
         List<Movie> movies = Movie.fetchMovies();
         String[] movieTitles = movies.stream().map(Movie::getTitle).toArray(String[]::new);
@@ -132,7 +137,7 @@ public class MovieView {
         }
     }
 
-
+    // Delete an existing movie (Admin-specific functionality)
     public static void deleteMovie(JFrame frame) {
         List<Movie> movies = Movie.fetchMovies();
         String[] movieTitles = movies.stream().map(Movie::getTitle).toArray(String[]::new);
@@ -171,5 +176,4 @@ public class MovieView {
             }
         }
     }
-
 }

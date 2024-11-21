@@ -1,8 +1,5 @@
-
 import javax.swing.*;
 import java.awt.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class WelcomeView {
@@ -13,16 +10,12 @@ public class WelcomeView {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(800, 600);
             frame.setLayout(new BorderLayout());
+
             JLabel welcomeLabel = new JLabel("MOVIE TICKET BOOKING SYSTEM", SwingConstants.CENTER);
             welcomeLabel.setFont(new Font("Georgia", Font.BOLD, 28));
             welcomeLabel.setForeground(new Color(0, 51, 102)); // Dark blue
             welcomeLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
             frame.add(welcomeLabel, BorderLayout.NORTH);
-
-//            JLabel welcomeLabel = new JLabel("Welcome to the Movie Ticket Booking System", SwingConstants.CENTER);
-//            welcomeLabel.setFont(new Font("Stencil", Font.BOLD, 24));
-//            welcomeLabel.setForeground(Color.darkGray);
-//            frame.add(welcomeLabel, BorderLayout.NORTH);
 
             JPanel buttonPanel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
@@ -33,13 +26,10 @@ public class WelcomeView {
             JButton loginButton = createStyledButton("Login");
             JButton signInButton = createStyledButton("Sign up");
 
-            //adminButton.addActionListener(e -> openAdminMenu(frame));
-            //ACTION LISTENER TO BUTTONS TO DEFINE THE BEHAVIOR WHEN CLICKED
             adminButton.addActionListener(e -> AdminView.showAdminLogin(frame));
-            guestButton.addActionListener(e -> openGuestMenu(frame));
+            guestButton.addActionListener(e -> GuestView.openGuestMenu(frame));
             loginButton.addActionListener(e -> loginForm(frame));
             signInButton.addActionListener(e -> showSignUpForm(frame));
-
 
             gbc.gridy = 0;
             buttonPanel.add(adminButton, gbc);
@@ -70,6 +60,7 @@ public class WelcomeView {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(216, 191, 216));
             }
+
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(200, 162, 200));
@@ -77,9 +68,6 @@ public class WelcomeView {
         });
         return button;
     }
-
-
-
 
     private static void showSignUpForm(JFrame frame) {
         JTextField nameField = new JTextField();
@@ -159,11 +147,13 @@ public class WelcomeView {
         JButton bookTicketButton = new JButton("Book Ticket");
         JButton logoutButton = new JButton("Logout");
 
-//        viewMoviesButton.addActionListener(e -> showMovie(frame));
-//        viewShowtimesButton.addActionListener(e -> showShowtime(frame));
-//        bookTicketButton.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Booking Feature Coming Soon!"));
-//        //Redirect back to the main menu
-//        logoutButton.addActionListener(e -> mainMenu(frame));
+        // Action listener to show seating map when the "Book Ticket" button is clicked
+        bookTicketButton.addActionListener(e -> {
+            int showtimeId = 1; // This will come from the selected showtime
+            showSeatMap(frame, showtimeId, user);
+        });
+
+        logoutButton.addActionListener(e -> showMainMenu());
 
         userMenuPanel.add(viewMoviesButton);
         userMenuPanel.add(viewShowtimesButton);
@@ -175,39 +165,108 @@ public class WelcomeView {
         frame.repaint();
     }
 
-
-    private static void openGuestMenu(JFrame frame) {
+    public static void showSeatMap(JFrame frame, int showtimeId, User user) {
         frame.getContentPane().removeAll();
         frame.setLayout(new BorderLayout());
 
-        JPanel guestPanel = new JPanel();
-        guestPanel.setLayout(new GridLayout(4, 1, 10, 10));
+        // Fetch the list of seats for this showtime
+        List<Seat> seats = Seat.fetchSeatsByShowtime(showtimeId);
 
-        JLabel guestLabel = new JLabel("Guest Menu", SwingConstants.CENTER);
-        guestLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        guestPanel.add(guestLabel);
+        // Panel to display the heading
+        JPanel headingPanel = new JPanel();
+        JLabel headingLabel = new JLabel("Select Seats", SwingConstants.CENTER);
+        headingLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        headingLabel.setForeground(new Color(3, 51, 102)); // Dark blue color for the heading
+        headingPanel.add(headingLabel);
+        frame.add(headingPanel, BorderLayout.NORTH);
 
-        JButton viewMoviesButton = new JButton("View Movies");
-        JButton viewShowtimesButton = new JButton("View Showtimes");
-        JButton backButton = new JButton("Back to Main Menu");
+        // Panel to display the seating map with GridBagLayout for better control
+        JPanel seatMapPanel = new JPanel();
+        seatMapPanel.setLayout(new GridBagLayout());  // Using GridBagLayout for more flexible positioning
 
-//        viewMoviesButton.addActionListener(e -> showMovie(frame));
-//        viewShowtimesButton.addActionListener(e -> showShowtime(frame));
-//        backButton.addActionListener(e -> mainMenu(frame));
+        // GridBagConstraints to control layout and padding
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Adjusted space around each seat button
+        gbc.fill = GridBagConstraints.CENTER; // Center align seat buttons within their grid cell
 
-        guestPanel.add(viewMoviesButton);
-        guestPanel.add(viewShowtimesButton);
-        guestPanel.add(backButton);
+        // Add seat buttons to the panel
+        int seatCounter = 0;
+        int maxSeatsInRow = 4; // You want 4 seats per row
+        for (Seat seat : seats) {
+            JButton seatButton = new JButton(seat.getSeatNumber());
+            seatButton.setFont(new Font("Arial", Font.PLAIN, 12));  // Adjust font size for better fit
+            seatButton.setPreferredSize(new Dimension(30, 30));  // Keep buttons smaller (tiny squares)
 
-        frame.add(guestPanel, BorderLayout.CENTER);
-        frame.revalidate();
-        frame.repaint();
+            // Set color based on seat availability
+            if ("Available".equalsIgnoreCase(seat.getStatus())) {
+                seatButton.setBackground(Color.GREEN);
+            } else {
+                seatButton.setBackground(Color.RED);
+            }
+
+            // Action listener to handle booking and releasing seats
+            seatButton.addActionListener(e -> {
+                if ("Available".equalsIgnoreCase(seat.getStatus())) {
+                    boolean reserved = seat.reserveSeat(user.getUserId());  // Assuming user has a userId field
+                    if (reserved) {
+                        seatButton.setBackground(Color.RED);
+                        JOptionPane.showMessageDialog(frame, "Seat " + seat.getSeatNumber() + " booked successfully.");
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Failed to book seat " + seat.getSeatNumber() + ".", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    boolean released = seat.releaseSeat();
+                    if (released) {
+                        seatButton.setBackground(Color.GREEN);
+                        JOptionPane.showMessageDialog(frame, "Seat " + seat.getSeatNumber() + " released successfully.");
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Failed to release seat " + seat.getSeatNumber() + ".", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            });
+
+            // Check if it's the last row with fewer than 4 seats
+            if ((seatCounter / maxSeatsInRow) == (seats.size() / maxSeatsInRow)) {
+                // Calculate spaces to center the remaining seats
+                int emptySpace = (maxSeatsInRow - (seats.size() % maxSeatsInRow)) / 2;
+                gbc.gridx = emptySpace;
+            } else {
+                gbc.gridx = seatCounter % maxSeatsInRow;
+            }
+
+            // Add the seat button to the grid
+            gbc.gridy = seatCounter / maxSeatsInRow;
+
+            seatMapPanel.add(seatButton, gbc);
+
+            // Increment the seat counter
+            seatCounter++;
+        }
+
+        // Add the seat map panel to the frame
+        frame.add(seatMapPanel, BorderLayout.CENTER);
+
+        // Panel for navigation buttons (Back to User Menu and Proceed to Payment)
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+        JButton backButton = new JButton("Back to User Menu");
+        backButton.addActionListener(e -> showUserMenu(frame, user));
+
+        JButton paymentButton = new JButton("Proceed to Payment");
+        paymentButton.addActionListener(e -> {
+            // Later define the payment view logic
+            JOptionPane.showMessageDialog(frame, "Proceeding to payment view.");
+        });
+
+        buttonPanel.add(backButton);
+        buttonPanel.add(paymentButton);
+
+        // Add the navigation buttons panel to the frame
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+
+        frame.revalidate();  // Revalidate the frame layout
+        frame.repaint();     // Repaint the frame to update UI
     }
 
-//    private static void mainMenu(JFrame frame) {
-//        frame.getContentPane().removeAll();
-//        main(new String[]{}); // Restart main
-//    }
+
 
 }
-

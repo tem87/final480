@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ShowtimeView {
 
-    public static void showShowtime(JFrame frame) {
+    public static void showShowtime(JFrame frame, Runnable backToMenuCallback) {
         frame.getContentPane().removeAll();
         frame.setLayout(new BorderLayout());
 
@@ -31,8 +31,11 @@ public class ShowtimeView {
 
         JScrollPane scrollPane = new JScrollPane(table);
 
-        JButton backButton = new JButton("Back to Admin Menu");
-        backButton.addActionListener(e -> AdminView.openAdminMenu(frame));
+        // Back button with a dynamic callback
+        JButton backButton = new JButton("Back to Menu");
+        backButton.setBackground(Color.DARK_GRAY);
+        backButton.setForeground(Color.WHITE);
+        backButton.addActionListener(e -> backToMenuCallback.run());
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -42,6 +45,7 @@ public class ShowtimeView {
         frame.revalidate();
         frame.repaint();
     }
+
 
 
 
