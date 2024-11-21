@@ -120,7 +120,7 @@ public class ShowtimeView {
                         int maxSeats = Integer.parseInt(maxSeatsField.getText());
 
                         showtimeToEdit = new Showtime(showtimeToEdit.getShowtimeID(), movieID, theaterID, dateTime, maxSeats);
-                        if (showtimeToEdit.updateShowtime()) {
+                        if (showtimeToEdit.modifyShowtime()) {
                             JOptionPane.showMessageDialog(frame, "Showtime updated successfully!");
                         } else {
                             JOptionPane.showMessageDialog(frame, "Failed to update showtime.");

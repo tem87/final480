@@ -52,7 +52,6 @@ public class Showtime {
         return maxSeats;
     }
 
-    // Fetch all showtimes from the database
     public static List<Showtime> fetchShowtimes() {
         List<Showtime> showtimes = new ArrayList<>();
         String query = "SELECT * FROM Showtime";
@@ -98,7 +97,7 @@ public class Showtime {
         }
     }
 
-    public boolean updateShowtime() {
+    public boolean modifyShowtime() {
         String query = "UPDATE Showtime SET movie_id = ?, theater_id = ?, start_time = ?, max_seats = ? WHERE showtime_id = ?";
 
         try (Connection connection = DBConnection.getConnection();

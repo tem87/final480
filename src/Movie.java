@@ -59,7 +59,6 @@ public class Movie {
         return length;
     }
 
-    // Add a new movie to the database
     public boolean addMovie() {
         String query = "INSERT INTO Movie (title, genre, rating, synopsis, length) VALUES (?, ?, ?, ?, ?)";
 
@@ -81,7 +80,6 @@ public class Movie {
         }
     }
 
-    // Update an existing movie in the database
     public boolean modifyMovie() {
         String query = "UPDATE Movie SET title = ?, genre = ?, rating = ?, synopsis = ?, length = ? WHERE movie_id = ?";
 
@@ -104,7 +102,6 @@ public class Movie {
         }
     }
 
-    // Delete a movie from the database
     public static boolean deleteMovie(int movieID) {
         String query = "DELETE FROM Movie WHERE movie_id = ?";
 

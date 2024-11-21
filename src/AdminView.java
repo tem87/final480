@@ -73,7 +73,7 @@ public class AdminView {
         addShowtimeButton.addActionListener(e -> ShowtimeView.addShowtime(frame));
         modifyShowtimeButton.addActionListener(e -> ShowtimeView.modifyShowtime(frame));
         deleteShowtimeButton.addActionListener(e -> ShowtimeView.deleteShowtime(frame));
-        //backButton.addActionListener(e -> mainMenu(frame));
+        backButton.addActionListener(e -> WelcomeView.showMainMenu());
 
         adminPanel.add(viewTheatreButton);
         adminPanel.add(addTheatreButton);

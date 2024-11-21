@@ -8,14 +8,14 @@ public class TheatreView {
         frame.getContentPane().removeAll();
         frame.setLayout(new BorderLayout());
 
-        java.util.List<Theater> theaters = Theater.fetchTheaters();
+        java.util.List<Theatre> theaters = Theatre.fetchTheaters();
 
         String[] columnNames = {"ID", "Name", "Location"};
 
         Object[][] data = new Object[theaters.size()][columnNames.length];
         for (int i = 0; i < theaters.size(); i++) {
-            Theater theater = theaters.get(i);
-            data[i][0] = theater.getTheaterID();
+            Theatre theater = theaters.get(i);
+            data[i][0] = theater.getTheatreID();
             data[i][1] = theater.getName();
             data[i][2] = theater.getLocation();
         }
@@ -54,8 +54,8 @@ public class TheatreView {
             String name = nameField.getText();
             String location = locationField.getText();
 
-            Theater newTheater = new Theater(name, location);
-            if (newTheater.addTheater()) {
+            Theatre newTheater = new Theatre(name, location);
+            if (newTheater.addTheatre()) {
                 JOptionPane.showMessageDialog(frame, "Theater added successfully!");
             } else {
                 JOptionPane.showMessageDialog(frame, "Failed to add theater.");
@@ -64,8 +64,8 @@ public class TheatreView {
     }
 
     public static void modifyTheatre(JFrame frame) {
-        List<Theater> theaters = Theater.fetchTheaters();
-        String[] theaterNames = theaters.stream().map(Theater::getName).toArray(String[]::new);
+        List<Theatre> theaters = Theatre.fetchTheaters();
+        String[] theaterNames = theaters.stream().map(Theatre::getName).toArray(String[]::new);
 
         String selectedTheater = (String) JOptionPane.showInputDialog(
                 frame,
@@ -78,7 +78,7 @@ public class TheatreView {
         );
 
         if (selectedTheater != null) {
-            Theater theaterToEdit = theaters.stream()
+            Theatre theaterToEdit = theaters.stream()
                     .filter(theater -> theater.getName().equals(selectedTheater))
                     .findFirst()
                     .orElse(null);
@@ -94,8 +94,8 @@ public class TheatreView {
 
                 int option = JOptionPane.showConfirmDialog(frame, message, "Modify Theater", JOptionPane.OK_CANCEL_OPTION);
                 if (option == JOptionPane.OK_OPTION) {
-                    theaterToEdit = new Theater(
-                            theaterToEdit.getTheaterID(),
+                    theaterToEdit = new Theatre(
+                            theaterToEdit.getTheatreID(),
                             nameField.getText(),
                             locationField.getText()
                     );

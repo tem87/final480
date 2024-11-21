@@ -5,26 +5,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Theater {
+public class Theatre {
     private int theaterID;
     private String name;
     private String location;
 
     // Constructor for existing theaters
-    public Theater(int theaterID, String name, String location) {
+    public Theatre(int theaterID, String name, String location) {
         this.theaterID = theaterID;
         this.name = name;
         this.location = location;
     }
 
     // Constructor for new theaters (without ID)
-    public Theater(String name, String location) {
+    public Theatre(String name, String location) {
         this.name = name;
         this.location = location;
     }
 
     // Getters
-    public int getTheaterID() {
+    public int getTheatreID() {
         return theaterID;
     }
 
@@ -37,8 +37,8 @@ public class Theater {
     }
 
     // Fetch all theaters from the database
-    public static List<Theater> fetchTheaters() {
-        List<Theater> theaters = new ArrayList<>();
+    public static List<Theatre> fetchTheaters() {
+        List<Theatre> theaters = new ArrayList<>();
         String query = "SELECT * FROM Theater";
 
         try (Connection connection = DBConnection.getConnection();
@@ -50,7 +50,7 @@ public class Theater {
                 String name = resultSet.getString("name");
                 String location = resultSet.getString("location");
 
-                theaters.add(new Theater(theaterID, name, location));
+                theaters.add(new Theatre(theaterID, name, location));
             }
 
         } catch (SQLException e) {
@@ -61,7 +61,7 @@ public class Theater {
     }
 
     // Insert a new theater into the database
-    public boolean addTheater() {
+    public boolean addTheatre() {
         String query = "INSERT INTO Theater (name, location) VALUES (?, ?)";
 
         try (Connection connection = DBConnection.getConnection();
