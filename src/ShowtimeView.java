@@ -46,6 +46,44 @@ public class ShowtimeView {
         frame.repaint();
     }
 
+    public static void showShowtimeDetails(JFrame frame, Runnable backToMenuCallback) {
+        frame.getContentPane().removeAll();
+        frame.setLayout(new BorderLayout());
+
+        List<Showtime> showtimes = Showtime.fetchShowtimesWithDetails();
+
+        String[] columnNames = {"Movie Name", "Theater Name", "Start Time", "Max Seats"};
+
+        Object[][] data = new Object[showtimes.size()][columnNames.length];
+        for (int i = 0; i < showtimes.size(); i++) {
+            Showtime showtime = showtimes.get(i);
+            data[i][0] = showtime.getMovieName();
+            data[i][1] = showtime.getTheaterName();
+            data[i][2] = showtime.getDateTime();
+            data[i][3] = showtime.getMaxSeats();
+        }
+
+        JTable table = new JTable(data, columnNames);
+        table.setFillsViewportHeight(true);
+        table.setRowHeight(30);
+        table.setFont(new Font("Arial", Font.PLAIN, 14));
+        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
+
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        JButton backButton = new JButton("Back to Menu");
+        backButton.addActionListener(e -> backToMenuCallback.run());
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(backButton, BorderLayout.SOUTH);
+
+        frame.add(panel, BorderLayout.CENTER);
+        frame.revalidate();
+        frame.repaint();
+    }
+
+
 
 
 

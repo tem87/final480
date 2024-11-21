@@ -13,6 +13,8 @@ public class Showtime {
     private int theaterID;
     private LocalDateTime dateTime;
     private int maxSeats;
+    private String movieName;
+    private String theaterName;
 
     // Constructor for existing showtimes
     public Showtime(int showtimeID, int movieID, int theaterID, LocalDateTime dateTime, int maxSeats) {
@@ -30,6 +32,16 @@ public class Showtime {
         this.dateTime = dateTime;
         this.maxSeats = maxSeats;
     }
+
+    //constructor with showtime details
+    public Showtime(int showtimeID, String movieName, String theaterName, LocalDateTime dateTime, int maxSeats) {
+        this.showtimeID = showtimeID;
+        this.movieName = movieName;
+        this.theaterName = theaterName;
+        this.dateTime = dateTime;
+        this.maxSeats = maxSeats;
+    }
+
 
     // Getters
     public int getShowtimeID() {
@@ -51,6 +63,10 @@ public class Showtime {
     public int getMaxSeats() {
         return maxSeats;
     }
+
+    public String getMovieName(){ return movieName;}
+
+    public String getTheaterName(){return theaterName;}
 
     public static List<Showtime> fetchShowtimes() {
         List<Showtime> showtimes = new ArrayList<>();
@@ -76,6 +92,37 @@ public class Showtime {
 
         return showtimes;
     }
+
+    public static List<Showtime> fetchShowtimesWithDetails() {
+        List<Showtime> showtimes = new ArrayList<>();
+        String query = "SELECT s.showtime_id, m.title AS movie_name, t.name AS theater_name, " +
+                "s.start_time, s.max_seats " +
+                "FROM Showtime s " +
+                "JOIN Movie m ON s.movie_id = m.movie_id " +
+                "JOIN Theater t ON s.theater_id = t.theater_id";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                int showtimeID = resultSet.getInt("showtime_id");
+                String movieName = resultSet.getString("movie_name");
+                String theaterName = resultSet.getString("theater_name");
+                LocalDateTime startTime = resultSet.getTimestamp("start_time").toLocalDateTime();
+                int maxSeats = resultSet.getInt("max_seats");
+
+                // Assuming you have a constructor in Showtime class to handle these details
+                showtimes.add(new Showtime(showtimeID, movieName, theaterName, startTime, maxSeats));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error fetching showtimes: " + e.getMessage());
+        }
+
+        return showtimes;
+    }
+
 
     public boolean addShowtime() {
         String query = "INSERT INTO Showtime (movie_id, theater_id, start_time, max_seats) VALUES (?, ?, ?, ?)";

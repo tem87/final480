@@ -28,7 +28,7 @@ public class GuestView {
                 MovieView.showMovie(frame, () -> GuestView.openGuestMenu(frame))
         );
         viewShowtimeButton.addActionListener(e ->
-                ShowtimeView.showShowtime(frame, () -> GuestView.openGuestMenu(frame))
+                ShowtimeView.showShowtimeDetails(frame, () -> GuestView.openGuestMenu(frame))
         );
         purchaseTicketButton.addActionListener(e ->
                 JOptionPane.showMessageDialog(frame, "Purchase Ticket Feature Coming Soon!")
