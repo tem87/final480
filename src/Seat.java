@@ -4,6 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
+
 
 public class Seat {
     private int seatId;
@@ -182,6 +186,40 @@ public class Seat {
             System.err.println("Error fetching seat: " + e.getMessage());
         }
         return null;
+    }
+
+    public static void showSeats(JFrame frame, int showtimeId) {
+        frame.getContentPane().removeAll();
+        frame.setLayout(new BorderLayout());
+
+        List<Seat> seats = Seat.fetchSeatsByShowtime(showtimeId);
+        String[] columnNames = {"Seat ID", "Seat Number", "Status"};
+
+        Object[][] data = new Object[seats.size()][columnNames.length];
+        for (int i = 0; i < seats.size(); i++) {
+            Seat seat = seats.get(i);
+            data[i][0] = seat.getSeatID();
+            data[i][1] = seat.getSeatNumber();
+            data[i][2] = seat.getStatus();
+        }
+
+        JTable table = new JTable(data, columnNames);
+        table.setFillsViewportHeight(true);
+        table.setRowHeight(30);
+        table.setFont(new Font("Arial", Font.PLAIN, 14));
+        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
+
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        JButton backButton = new JButton("Back to Showtime Menu");
+        backButton.addActionListener(e -> ShowtimeView.showShowtime(frame, () -> GuestView.openGuestMenu(frame)));
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(backButton, BorderLayout.SOUTH);
+
+        frame.add(panel, BorderLayout.CENTER);
+        frame.revalidate();
+        frame.repaint();
     }
 
     public Object getSeatID() {
